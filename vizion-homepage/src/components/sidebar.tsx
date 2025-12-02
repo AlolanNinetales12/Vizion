@@ -3,9 +3,11 @@ import React from "react";
 type Props = {
   current: string;
   onNavigate: (page: string) => void;
+  isAuthenticated?: boolean;
+  onLogout?: () => void;
 };
 
-const Sidebar: React.FC<Props> = ({ current, onNavigate }) => {
+const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogout }) => {
   return (
     <aside className="w-64 bg-white border-r min-h-screen p-4">
       <div className="mb-8">
@@ -34,6 +36,12 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate }) => {
         >
           Dashboards
         </button>
+
+        {isAuthenticated ? (
+          <button onClick={() => onLogout && onLogout()} className="w-full text-left px-3 py-2 rounded hover:bg-gray-100">Logout</button>
+        ) : (
+          <button onClick={() => onNavigate("login")} className={`w-full text-left px-3 py-2 rounded ${current === "login" ? "bg-blue-500 text-white" : "hover:bg-gray-100"}`}>Login</button>
+        )}
       </nav>
     </aside>
   );

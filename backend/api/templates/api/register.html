@@ -1,0 +1,14 @@
+{% extends 'api/base.html' %}
+
+{% block title %}Register - Vizion{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2>Create account</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn-primary" type="submit">Sign up</button>
+    </form>
+  </div>
+{% endblock %}

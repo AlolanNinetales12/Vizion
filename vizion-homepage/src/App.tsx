@@ -1,7 +1,9 @@
 // src/App.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import AnalyticsPage from "./components/AnalyticsPage";
+import ProjectsPage from "./components/ProjectsPage";
+import LoginPage from "./components/LoginPage";
 
 const features: string[] = [
   "Interactive Charts",
@@ -12,10 +14,33 @@ const features: string[] = [
 
 const App: React.FC = () => {
   const [page, setPage] = useState<string>("home");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  // Check session on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/projects-api/', { credentials: 'include' });
+        setIsAuthenticated(res.ok);
+      } catch (err) {
+        setIsAuthenticated(false);
+      }
+    })();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('http://127.0.0.1:8000/logout/', { credentials: 'include' });
+    } catch (err) {
+      console.error(err);
+    }
+    setIsAuthenticated(false);
+    setPage('home');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 flex">
-      <Sidebar current={page} onNavigate={setPage} />
+      <Sidebar current={page} onNavigate={setPage} isAuthenticated={isAuthenticated} onLogout={handleLogout} />
 
       <main className="flex-1 p-6">
         {page === "home" && (
@@ -38,12 +63,11 @@ const App: React.FC = () => {
 
         {page === "analytics" && <AnalyticsPage />}
 
-        {page === "dashboard" && (
-          <div className="p-6 bg-white rounded shadow">
-            <h2 className="text-2xl font-bold mb-2">Dashboards</h2>
-            <p className="text-gray-600">Create and manage saved dashboards (coming soon).</p>
-          </div>
+        {page === "login" && (
+          <LoginPage onSuccess={() => { setIsAuthenticated(true); setPage('dashboard'); }} />
         )}
+
+        {page === "dashboard" && <ProjectsPage />}
       </main>
     </div>
   );

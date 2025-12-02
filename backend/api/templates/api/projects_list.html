@@ -1,0 +1,25 @@
+{% extends 'api/base.html' %}
+
+{% block title %}Projects - Vizion{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2>Your Projects</h2>
+      <a class="btn-outline" href="{% url 'api:project_create' %}">New Project</a>
+    </div>
+
+    {% if projects %}
+      <ul class="project-list">
+        {% for p in projects %}
+          <li>
+            <a href="{% url 'api:project_detail' p.pk %}">{{ p.name }}</a>
+            <div class="muted">{{ p.description|truncatechars:80 }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No projects yet. Create one.</p>
+    {% endif %}
+  </div>
+{% endblock %}

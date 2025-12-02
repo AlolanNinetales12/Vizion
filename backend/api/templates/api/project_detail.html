@@ -1,0 +1,20 @@
+{% extends 'api/base.html' %}
+
+{% block title %}{{ project.name }} - Vizion{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2>{{ project.name }}</h2>
+      <div>
+        <a class="btn-outline" href="{% url 'api:project_edit' project.pk %}">Edit</a>
+        <a class="btn-danger" href="{% url 'api:project_delete' project.pk %}">Delete</a>
+      </div>
+    </div>
+
+    <p>{{ project.description }}</p>
+    {% if project.data_file %}
+      <p>Attached file: <a href="{{ project.data_file.url }}">Download</a></p>
+    {% endif %}
+  </div>
+{% endblock %}
