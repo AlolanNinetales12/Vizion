@@ -57,115 +57,198 @@ Elderberry,30,2025-11-05`;
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <h2 className="text-2xl font-bold">Analytics</h2>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-3xl font-bold text-blue-300 mb-2">Data Analytics</h2>
+        <p className="text-blue-400">Upload a CSV and visualize your data with interactive charts</p>
+      </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="md:col-span-1">
-          <FileUploader onData={(d) => { setRows(d); setXCol(null); setYCol(null); }} />
+      <div className="grid md:grid-cols-3 gap-6">
+        {/* Upload and Instructions */}
+        <div className="md:col-span-1 space-y-4">
+          <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 border border-blue-800 rounded-xl p-6 shadow-lg shadow-blue-500/10">
+            <FileUploader onData={(d) => { setRows(d); setXCol(null); setYCol(null); }} />
+          </div>
 
-          <div className="mt-4 bg-white border rounded p-3 text-sm text-gray-700">
-            <div className="font-semibold mb-2">CSV format & example</div>
-            <div className="mb-2">
-              - Provide a header row. The file must be UTF-8 encoded CSV.
+          <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 border border-blue-800 rounded-xl p-6 shadow-lg shadow-blue-500/10">
+            <div className="font-bold text-blue-300 mb-3 text-lg">📋 CSV Format</div>
+            <div className="space-y-2 text-sm text-blue-300">
+              <p>• Include a header row</p>
+              <p>• Use comma-separated values</p>
+              <p>• X column: dates or categories</p>
+              <p>• Y column: numeric values</p>
             </div>
-            <div className="mb-2">
-              - Choose an X column (categorical or date) and a numeric Y column.
+            <div className="mt-4">
+              <div className="text-xs text-blue-400 mb-2 font-semibold">Example:</div>
+              <pre className="bg-blue-900/40 border border-blue-700/30 rounded p-3 text-xs text-blue-200 overflow-auto max-h-32">{exampleCSV}</pre>
             </div>
-            <div className="mb-2">Example (comma separated):</div>
-            <pre className="bg-gray-100 p-2 rounded text-xs overflow-auto">{exampleCSV}</pre>
-            <button onClick={downloadExample} className="mt-2 px-3 py-1 bg-blue-600 text-white rounded">Download example CSV</button>
+            <button onClick={downloadExample} className="w-full mt-3 px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-sm transition">
+              ⬇ Download Example
+            </button>
           </div>
         </div>
 
-        <div className="md:col-span-2 bg-white p-4 rounded shadow">
-          <div className="flex flex-wrap gap-4 items-center mb-4">
-            <div>
-              <label htmlFor="x-col-select" className="block text-sm">X column</label>
-              <select id="x-col-select" className="border p-2" value={xCol ?? ""} onChange={(e) => setXCol(e.target.value || null)}>
-                <option value="">Select column</option>
-                {columns.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+        {/* Chart and Controls */}
+        <div className="md:col-span-2 bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 border border-blue-800 rounded-xl p-6 shadow-lg shadow-blue-500/10">
+          <div className="space-y-4">
+            {/* Controls */}
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="flex-1 min-w-fit">
+                <label htmlFor="x-col-select" className="block text-sm font-medium text-blue-300 mb-1.5">
+                  X Column (Categories)
+                </label>
+                <select
+                  id="x-col-select"
+                  title="x column"
+                  className="w-full px-3 py-2 bg-blue-900/30 border border-blue-700/50 rounded-lg text-blue-100 focus:outline-none focus:border-blue-500 transition"
+                  value={xCol ?? ""}
+                  onChange={(e) => setXCol(e.target.value || null)}
+                >
+                  <option value="">Select column</option>
+                  {columns.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex-1 min-w-fit">
+                <label htmlFor="y-col-select" className="block text-sm font-medium text-blue-300 mb-1.5">
+                  Y Column (Numbers)
+                </label>
+                <select
+                  id="y-col-select"
+                  title="y column"
+                  className="w-full px-3 py-2 bg-blue-900/30 border border-blue-700/50 rounded-lg text-blue-100 focus:outline-none focus:border-blue-500 transition"
+                  value={yCol ?? ""}
+                  onChange={(e) => setYCol(e.target.value || null)}
+                >
+                  <option value="">Select column</option>
+                  {numericColumns.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex-1 min-w-fit">
+                <label htmlFor="chart-select" className="block text-sm font-medium text-blue-300 mb-1.5">
+                  Chart Type
+                </label>
+                <select
+                  id="chart-select"
+                  title="chart type"
+                  className="w-full px-3 py-2 bg-blue-900/30 border border-blue-700/50 rounded-lg text-blue-100 focus:outline-none focus:border-blue-500 transition"
+                  value={chartType}
+                  onChange={(e) => setChartType(e.target.value as any)}
+                >
+                  <option value="line">📈 Line</option>
+                  <option value="bar">📊 Bar</option>
+                  <option value="pie">🥧 Pie</option>
+                </select>
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="y-col-select" className="block text-sm">Y column</label>
-              <select id="y-col-select" className="border p-2" value={yCol ?? ""} onChange={(e) => setYCol(e.target.value || null)}>
-                <option value="">Select column</option>
-                {numericColumns.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
+            {/* Chart */}
+            {chartData.length > 0 ? (
+              <div className="w-full h-80 bg-blue-800/20 border border-blue-700/20 rounded-lg p-4">
+                {chartType === "line" && (
+                  <ResponsiveContainer>
+                    <LineChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e40af" />
+                      <XAxis dataKey="name" stroke="#93c5fd" />
+                      <YAxis stroke="#93c5fd" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#0b2130",
+                          border: "1px solid #1e40af",
+                          borderRadius: "8px",
+                        }}
+                        labelStyle={{ color: "#93c5fd" }}
+                      />
+                      <Line type="monotone" dataKey="value" stroke="#1e90ff" strokeWidth={2} dot={{ fill: "#1e90ff" }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
 
-            <div>
-              <label htmlFor="chart-select" className="block text-sm">Chart</label>
-              <select id="chart-select" className="border p-2" value={chartType} onChange={(e) => setChartType(e.target.value as any)}>
-                <option value="line">Line</option>
-                <option value="bar">Bar</option>
-                <option value="pie">Pie</option>
-              </select>
-            </div>
+                {chartType === "bar" && (
+                  <ResponsiveContainer>
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e40af" />
+                      <XAxis dataKey="name" stroke="#93c5fd" />
+                      <YAxis stroke="#93c5fd" />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#0b2130",
+                          border: "1px solid #1e40af",
+                          borderRadius: "8px",
+                        }}
+                        labelStyle={{ color: "#93c5fd" }}
+                      />
+                      <Bar dataKey="value" fill="#1e90ff" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+
+                {chartType === "pie" && (
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie data={chartData} dataKey="value" nameKey="name" outerRadius={100} label={{ fill: "#93c5fd" }}>
+                        {chartData.map((_, idx) => (
+                          <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#0b2130",
+                          border: "1px solid #1e40af",
+                          borderRadius: "8px",
+                        }}
+                        labelStyle={{ color: "#93c5fd" }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+            ) : (
+              <div className="w-full h-80 bg-blue-800/20 border border-blue-700/20 rounded-lg flex items-center justify-center">
+                <p className="text-blue-400">Upload a CSV and select columns to visualize data</p>
+              </div>
+            )}
           </div>
 
-          <div className="w-full h-80">
-            {chartType === "line" && (
-              <ResponsiveContainer>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-
-            {chartType === "bar" && (
-              <ResponsiveContainer>
-                <BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip /><Bar dataKey="value" fill="#82ca9d" /></BarChart>
-              </ResponsiveContainer>
-            )}
-
-            {chartType === "pie" && (
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie data={chartData} dataKey="value" nameKey="name" outerRadius={100} label>
-                    {chartData.map((entry, idx) => (
-                      <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-
-          <div className="mt-6">
-            <h3 className="font-semibold mb-2">Data preview</h3>
-            <div className="overflow-auto max-h-64 border rounded">
-              <table className="min-w-full text-left">
-                <thead className="bg-gray-50 sticky top-0">
-                  <tr>
-                    {columns.map((c) => (
-                      <th key={c} className="px-2 py-1 text-xs text-gray-600">{c}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.slice(0, 20).map((r, i) => (
-                    <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+          {/* Data Preview */}
+          {rows.length > 0 && (
+            <div className="mt-6">
+              <h3 className="font-semibold text-blue-300 mb-3">Data Preview ({rows.length} rows)</h3>
+              <div className="overflow-auto max-h-64 border border-blue-700/30 rounded-lg bg-blue-900/20">
+                <table className="min-w-full text-left text-sm">
+                  <thead className="bg-blue-900/40 border-b border-blue-700/30 sticky top-0">
+                    <tr>
                       {columns.map((c) => (
-                        <td key={c} className="px-2 py-1 text-sm">{String(r[c])}</td>
+                        <th key={c} className="px-3 py-2 text-xs font-semibold text-blue-300">
+                          {c}
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {rows.slice(0, 20).map((r, i) => (
+                      <tr key={i} className={`border-b border-blue-700/20 ${i % 2 === 0 ? "bg-blue-900/10" : ""}`}>
+                        {columns.map((c) => (
+                          <td key={c} className="px-3 py-2 text-blue-200">
+                            {String(r[c])}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

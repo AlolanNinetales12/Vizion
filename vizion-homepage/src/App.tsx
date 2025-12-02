@@ -39,22 +39,29 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 flex">
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-950 text-gray-100 flex">
       <Sidebar current={page} onNavigate={setPage} isAuthenticated={isAuthenticated} onLogout={handleLogout} />
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-8">
         {page === "home" && (
           <>
-            <section className="text-center py-12 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded mb-6">
-              <h2 className="text-4xl font-bold mb-2">Turn Data Into Insights</h2>
-              <p className="text-lg">Interactive dashboards and visualizations to help you understand your data.</p>
+            <section className="mb-8">
+              <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300 mb-2">
+                Turn Data Into Insights
+              </h2>
+              <p className="text-lg text-blue-300">
+                Interactive dashboards and visualizations to help you understand your data.
+              </p>
             </section>
 
-            <section className="max-w-7xl mx-auto px-6 py-8 grid md:grid-cols-4 gap-6">
+            <section className="grid md:grid-cols-4 gap-6 mb-12">
               {features.map((feature) => (
-                <div key={feature} className="bg-white shadow rounded p-4 text-center">
-                  <h3 className="font-semibold text-lg mb-2">{feature}</h3>
-                  <p className="text-gray-600 text-sm">Quick preview of the product capability.</p>
+                <div
+                  key={feature}
+                  className="bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 border border-blue-800 shadow-lg shadow-blue-500/10 rounded-xl p-6 text-center hover:border-blue-600 hover:shadow-lg hover:shadow-blue-500/20 transition"
+                >
+                  <h3 className="font-semibold text-lg mb-2 text-blue-300">{feature}</h3>
+                  <p className="text-blue-400 text-sm">Powerful analytics capabilities for your data</p>
                 </div>
               ))}
             </section>

@@ -24,10 +24,21 @@ const FileUploader: React.FC<Props> = ({ onData }) => {
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow">
-      <label htmlFor="csv-file" className="block text-sm font-medium text-gray-700 mb-2">Upload CSV</label>
-      <input id="csv-file" aria-label="Upload CSV file" type="file" accept=".csv,text/csv" onChange={handleFile} />
-      <p className="text-xs text-gray-500 mt-2">CSV should include a header row. Dates or categories are fine for X column; Y should be numeric.</p>
+    <div className="space-y-3">
+      <label htmlFor="csv-file" className="block text-lg font-semibold text-blue-300">
+        📤 Upload CSV File
+      </label>
+      <input
+        id="csv-file"
+        aria-label="Upload CSV file"
+        type="file"
+        accept=".csv,text/csv"
+        className="w-full text-sm text-blue-400 file:bg-blue-600 file:text-white file:border-0 file:rounded-lg file:px-4 file:py-2 file:cursor-pointer file:font-semibold hover:file:bg-blue-500 transition"
+        onChange={handleFile}
+      />
+      <p className="text-xs text-blue-400">
+        CSV should include a header row. Dates or categories are fine for X column; Y should be numeric.
+      </p>
     </div>
   );
 };
