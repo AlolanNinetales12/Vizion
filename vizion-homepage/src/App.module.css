@@ -1,0 +1,21 @@
+/* App.module.css - Main authenticated layout styling */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #172554 0%, #1e3a8a 50%, #172554 100%);
+  color: #f3f4f6;
+  display: flex;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 1rem;
+  }
+}

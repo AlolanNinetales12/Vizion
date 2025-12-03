@@ -2,13 +2,13 @@ import React from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { saveAs } from "file-saver";
-import * as XLSX from "xlsx";
 
 type Props = {
   targetId?: string; // id of DOM element to export
+  data?: any[]; // optional data array for CSV export
 };
 
-const ExportControls: React.FC<Props> = ({ targetId = "root" }) => {
+const ExportControls: React.FC<Props> = ({ targetId = "root", data = [] }) => {
   const exportPNG = async () => {
     const el = document.getElementById(targetId);
     if (!el) return;
@@ -28,20 +28,23 @@ const ExportControls: React.FC<Props> = ({ targetId = "root" }) => {
     pdf.save('export.pdf');
   };
 
-  const exportExcel = (data: any[] = []) => {
-    const ws = XLSX.utils.json_to_sheet(data.length ? data : [{ note: 'No data provided' }]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Export');
-    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([wbout], { type: 'application/octet-stream' });
-    saveAs(blob, 'export.xlsx');
+  const exportCSV = () => {
+    if (!data || data.length === 0) {
+      alert('No data to export');
+      return;
+    }
+    const headers = Object.keys(data[0]);
+    const rows = data.map((row) => headers.map((h) => JSON.stringify(row[h] ?? '')).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, 'export.csv');
   };
 
   return (
     <div className="flex gap-3">
       <button onClick={exportPNG} className="btn-primary">Export PNG</button>
       <button onClick={exportPDF} className="btn-outline">Export PDF</button>
-      <button onClick={() => exportExcel()} className="btn-outline">Export Excel</button>
+      {data.length > 0 && <button onClick={exportCSV} className="btn-outline">Export CSV</button>}
     </div>
   );
 };

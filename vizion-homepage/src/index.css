@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
 :root {
   --bg: #071029;
   --panel: #07293a;
@@ -203,8 +205,6 @@ label {
   .w-64 { width: 56px !important; }
   .min-h-screen { min-height: auto; }
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 
 /* === Modern dark theme overrides / typography / microinteractions === */
 :root{

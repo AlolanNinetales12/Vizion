@@ -1,4 +1,6 @@
+
 import React from "react";
+import styles from "./Sidebar.module.css";
 
 type Props = {
   current: string;
@@ -9,19 +11,17 @@ type Props = {
 
 const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogout }) => {
   return (
-    <aside className="w-64 bg-gradient-to-b from-blue-900 to-blue-950 border-r border-blue-800 min-h-screen p-4 flex flex-col">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-blue-300">Vizion</h1>
-        <p className="text-xs text-blue-400 uppercase tracking-wider">Analytics</p>
+    <aside className={styles.sidebar}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Vizion</h1>
+        <p className={styles.subtitle}>Analytics</p>
       </div>
 
-      <nav className="space-y-1 flex-1">
+      <nav className={styles.nav}>
         <button
           onClick={() => onNavigate("home")}
-          className={`w-full text-left px-3 py-2.5 rounded-lg transition ${
-            current === "home"
-              ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
-              : "text-blue-200 hover:bg-blue-800/40"
+          className={`${styles.navButton} ${
+            current === "home" ? styles.navButtonActive : styles.navButtonInactive
           }`}
         >
           Home
@@ -29,10 +29,8 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogo
 
         <button
           onClick={() => onNavigate("analytics")}
-          className={`w-full text-left px-3 py-2.5 rounded-lg transition ${
-            current === "analytics"
-              ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
-              : "text-blue-200 hover:bg-blue-800/40"
+          className={`${styles.navButton} ${
+            current === "analytics" ? styles.navButtonActive : styles.navButtonInactive
           }`}
         >
           Analytics
@@ -40,10 +38,8 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogo
 
         <button
           onClick={() => onNavigate("dashboard")}
-          className={`w-full text-left px-3 py-2.5 rounded-lg transition ${
-            current === "dashboard"
-              ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
-              : "text-blue-200 hover:bg-blue-800/40"
+          className={`${styles.navButton} ${
+            current === "dashboard" ? styles.navButtonActive : styles.navButtonInactive
           }`}
         >
           Projects
@@ -51,34 +47,30 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogo
 
         <button
           onClick={() => onNavigate("account")}
-          className={`w-full text-left px-3 py-2.5 rounded-lg transition ${
-            current === "account"
-              ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
-              : "text-blue-200 hover:bg-blue-800/40"
+          className={`${styles.navButton} ${
+            current === "account" ? styles.navButtonActive : styles.navButtonInactive
           }`}
         >
           Account
         </button>
 
         {/* Project folders and team tools */}
-        <div className="mt-4">
-          <div className="text-xs text-blue-400 uppercase mb-2">Folders</div>
-          <button onClick={() => onNavigate('dashboard')} className="w-full text-left px-3 py-2 rounded-lg text-blue-200 hover:bg-blue-800/40">All Projects</button>
-          <button onClick={() => onNavigate('dashboard')} className="w-full text-left px-3 py-2 rounded-lg text-blue-200 hover:bg-blue-800/40">Starred</button>
-          <button onClick={() => onNavigate('dashboard')} className="w-full text-left px-3 py-2 rounded-lg text-blue-200 hover:bg-blue-800/40">Team</button>
+        <div className={styles.folders}>
+          <div className={styles.folderLabel}>Folders</div>
+          <button onClick={() => onNavigate('dashboard')} className={styles.folderButton}>All Projects</button>
+          <button onClick={() => onNavigate('dashboard')} className={styles.folderButton}>Starred</button>
+          <button onClick={() => onNavigate('dashboard')} className={styles.folderButton}>Team</button>
         </div>
 
         {isAuthenticated ? (
-          <button onClick={() => onLogout && onLogout()} className="w-full text-left px-3 py-2.5 rounded-lg text-blue-200 hover:bg-blue-800/40 transition">
+          <button onClick={() => onLogout && onLogout && onLogout()} className={`${styles.navButton} ${styles.navButtonInactive}`}>
             Logout
           </button>
         ) : (
           <button
             onClick={() => onNavigate("login")}
-            className={`w-full text-left px-3 py-2.5 rounded-lg transition ${
-              current === "login"
-                ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
-                : "text-blue-200 hover:bg-blue-800/40"
+            className={`${styles.navButton} ${
+              current === "login" ? styles.navButtonActive : styles.navButtonInactive
             }`}
           >
             Login
@@ -86,8 +78,8 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogo
         )}
       </nav>
 
-      <div className="pt-4 border-t border-blue-800">
-        <p className="text-xs text-blue-500">© 2025 Vizion</p>
+      <div className={styles.footer}>
+        <p className={styles.footerText}>© 2025 Vizion</p>
       </div>
     </aside>
   );
