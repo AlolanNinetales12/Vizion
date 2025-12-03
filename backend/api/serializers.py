@@ -8,3 +8,10 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ["id", "owner", "name", "description", "data_file", "created_at", "updated_at"]
+
+
+class AccountSerializer(serializers.Serializer):
+    username = serializers.CharField(read_only=True)
+    email = serializers.EmailField(required=False, allow_null=True)
+    first_name = serializers.CharField(required=False, allow_null=True)
+    last_name = serializers.CharField(required=False, allow_null=True)

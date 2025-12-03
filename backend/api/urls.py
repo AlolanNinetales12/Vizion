@@ -18,6 +18,9 @@ urlpatterns = [
     path("projects/<int:pk>/", views.project_detail, name="project_detail"),
     path("projects/<int:pk>/edit/", views.project_edit, name="project_edit"),
     path("projects/<int:pk>/delete/", views.project_delete, name="project_delete"),
+    path("auth-status/", views.auth_status, name="auth_status"),
+    path("account/", views.account_view, name="account"),
+    path("account/change-password/", views.change_password, name="change_password"),
 ]
 
 urlpatterns += router.urls

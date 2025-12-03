@@ -49,6 +49,17 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogo
           Projects
         </button>
 
+        <button
+          onClick={() => onNavigate("account")}
+          className={`w-full text-left px-3 py-2.5 rounded-lg transition ${
+            current === "account"
+              ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
+              : "text-blue-200 hover:bg-blue-800/40"
+          }`}
+        >
+          Account
+        </button>
+
         {isAuthenticated ? (
           <button onClick={() => onLogout && onLogout()} className="w-full text-left px-3 py-2.5 rounded-lg text-blue-200 hover:bg-blue-800/40 transition">
             Logout

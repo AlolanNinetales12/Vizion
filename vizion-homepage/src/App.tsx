@@ -4,6 +4,8 @@ import Sidebar from "./components/Sidebar";
 import AnalyticsPage from "./components/AnalyticsPage";
 import ProjectsPage from "./components/ProjectsPage";
 import LoginPage from "./components/LoginPage";
+import DashboardBuilder from "./components/DashboardBuilder";
+import AccountPage from "./components/AccountPage";
 
 const features: string[] = [
   "Interactive Charts",
@@ -18,10 +20,16 @@ const App: React.FC = () => {
 
   // Check session on mount
   useEffect(() => {
+    // Use a lightweight auth-status endpoint to avoid 403 noise from protected endpoints
     (async () => {
       try {
-        const res = await fetch('http://127.0.0.1:8000/api/projects-api/', { credentials: 'include' });
-        setIsAuthenticated(res.ok);
+        const res = await fetch('http://127.0.0.1:8000/api/auth-status/', { credentials: 'include' });
+        if (res.ok) {
+          const j = await res.json();
+          setIsAuthenticated(Boolean(j.authenticated));
+        } else {
+          setIsAuthenticated(false);
+        }
       } catch (err) {
         setIsAuthenticated(false);
       }
@@ -70,9 +78,13 @@ const App: React.FC = () => {
 
         {page === "analytics" && <AnalyticsPage />}
 
+        {page === "builder" && <DashboardBuilder />}
+
         {page === "login" && (
           <LoginPage onSuccess={() => { setIsAuthenticated(true); setPage('dashboard'); }} />
         )}
+
+        {page === "account" && <AccountPage />}
 
         {page === "dashboard" && <ProjectsPage />}
       </main>
