@@ -60,6 +60,14 @@ const Sidebar: React.FC<Props> = ({ current, onNavigate, isAuthenticated, onLogo
           Account
         </button>
 
+        {/* Project folders and team tools */}
+        <div className="mt-4">
+          <div className="text-xs text-blue-400 uppercase mb-2">Folders</div>
+          <button onClick={() => onNavigate('dashboard')} className="w-full text-left px-3 py-2 rounded-lg text-blue-200 hover:bg-blue-800/40">All Projects</button>
+          <button onClick={() => onNavigate('dashboard')} className="w-full text-left px-3 py-2 rounded-lg text-blue-200 hover:bg-blue-800/40">Starred</button>
+          <button onClick={() => onNavigate('dashboard')} className="w-full text-left px-3 py-2 rounded-lg text-blue-200 hover:bg-blue-800/40">Team</button>
+        </div>
+
         {isAuthenticated ? (
           <button onClick={() => onLogout && onLogout()} className="w-full text-left px-3 py-2.5 rounded-lg text-blue-200 hover:bg-blue-800/40 transition">
             Logout

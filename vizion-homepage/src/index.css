@@ -204,9 +204,9 @@ label {
   .min-h-screen { min-height: auto; }
 }
 
-/* === Modern dark theme overrides / typography / microinteractions === */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 
+/* === Modern dark theme overrides / typography / microinteractions === */
 :root{
   --bg-deep: #0a0f14; /* deep charcoal */
   --panel: #0e1720;

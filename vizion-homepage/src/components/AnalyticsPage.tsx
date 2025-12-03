@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FileUploader from "./FileUploader";
+import ExportControls from "./ExportControls";
 import {
   LineChart,
   Line,
@@ -18,6 +19,9 @@ import {
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
 
 const AnalyticsPage: React.FC = () => {
+  const [username, setUsername] = useState<string | null>(null);
+  const [recentProjects, setRecentProjects] = useState<any[]>([]);
+  const [toasts, setToasts] = useState<Array<{id:number,msg:string}>>([]);
   const [rows, setRows] = useState<any[]>([]);
   const [xCol, setXCol] = useState<string | null>(null);
   const [yCol, setYCol] = useState<string | null>(null);
@@ -56,18 +60,89 @@ Elderberry,30,2025-11-05`;
     URL.revokeObjectURL(url);
   };
 
+  useEffect(() => {
+    // fetch auth-status and recent projects (if any)
+    (async () => {
+      try {
+        const r = await fetch('http://127.0.0.1:8000/api/auth-status/', { credentials: 'include' });
+        if (r.ok) {
+          const j = await r.json();
+          setUsername(j.username || null);
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      try {
+        const p = await fetch('http://127.0.0.1:8000/api/projects-api/', { credentials: 'include' });
+        if (p.ok) {
+          const pj = await p.json();
+          setRecentProjects(pj.results ? pj.results.slice(0,5) : (Array.isArray(pj)?pj.slice(0,5):[]));
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
+  }, []);
+
+  const pushToast = (msg: string) => {
+    const id = Date.now();
+    setToasts((t) => [...t, { id, msg }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4000);
+  };
+
+  const navigateToBuilder = () => {
+    window.dispatchEvent(new CustomEvent('vizion:navigate', { detail: 'builder' }));
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold text-blue-300 mb-2">Data Analytics</h2>
-        <p className="text-blue-400">Upload a CSV and visualize your data with interactive charts</p>
+      {/* Toasts */}
+      <div aria-live="polite" className="fixed top-6 right-6 z-50 space-y-2">
+        {toasts.map((t) => (
+          <div key={t.id} className="px-4 py-2 rounded-md bg-blue-800/90 text-blue-100 shadow-lg">{t.msg}</div>
+        ))}
+      </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold text-blue-300 mb-2">Welcome{username ? `, ${username}` : ''}</h2>
+          <p className="text-blue-400">Launchpad for data exploration — upload, visualize and build dashboards.</p>
+        </div>
+
+        <div className="text-right">
+          <div className="text-sm text-blue-300">Recent Projects</div>
+          {recentProjects.length > 0 ? (
+            <ul className="text-sm text-blue-200 mt-2 space-y-1">
+              {recentProjects.map((rp:any) => (
+                <li key={rp.id} className="p-2 rounded bg-[#041017] border border-blue-800/40 text-blue-100">{rp.name}</li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-xs text-blue-400 mt-2">No recent projects</div>
+          )}
+        </div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
         {/* Upload and Instructions */}
         <div className="md:col-span-1 space-y-4">
-          <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 border border-blue-800 rounded-xl p-6 shadow-lg shadow-blue-500/10">
-            <FileUploader onData={(d) => { setRows(d); setXCol(null); setYCol(null); }} />
+          <div className="card-surface">
+            <div className="flex items-start gap-4">
+              <div className="icon-circle" aria-hidden>📁</div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-blue-200">Quick Upload</h4>
+                <p className="text-sm text-blue-400">Drop CSV files here for instant parsing and visualization.</p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <FileUploader onData={(d) => { setRows(d); setXCol(null); setYCol(null); pushToast('File parsed'); }} />
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <button onClick={() => { navigateToBuilder(); }} className="btn-primary">Open Dashboard Builder</button>
+              <button onClick={() => pushToast('Advanced uploader coming soon')} className="btn-outline">Advanced Upload</button>
+            </div>
           </div>
 
           <div className="bg-gradient-to-br from-blue-900 via-blue-950 to-blue-950 border border-blue-800 rounded-xl p-6 shadow-lg shadow-blue-500/10">
@@ -149,11 +224,15 @@ Elderberry,30,2025-11-05`;
                   <option value="pie">🥧 Pie</option>
                 </select>
               </div>
+
+              <div className="ml-auto">
+                <ExportControls targetId="chart-area" />
+              </div>
             </div>
 
             {/* Chart */}
-            {chartData.length > 0 ? (
-              <div className="w-full h-80 bg-blue-800/20 border border-blue-700/20 rounded-lg p-4">
+              {chartData.length > 0 ? (
+              <div id="chart-area" className="w-full h-80 bg-blue-800/20 border border-blue-700/20 rounded-lg p-4">
                 {chartType === "line" && (
                   <ResponsiveContainer>
                     <LineChart data={chartData}>

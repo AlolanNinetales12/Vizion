@@ -36,6 +36,15 @@ const App: React.FC = () => {
     })();
   }, []);
 
+  // listen for global navigation events from components
+  useEffect(() => {
+    const handler = (e: any) => {
+      if (e?.detail && typeof e.detail === 'string') setPage(e.detail);
+    };
+    window.addEventListener('vizion:navigate', handler as EventListener);
+    return () => window.removeEventListener('vizion:navigate', handler as EventListener);
+  }, []);
+
   const handleLogout = async () => {
     try {
       await fetch('http://127.0.0.1:8000/logout/', { credentials: 'include' });
